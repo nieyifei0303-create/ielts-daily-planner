@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#18392f">
+  <meta name="description" content="私人 IELTS 每日计划、打卡、复盘与学习建议工具">
+  <title>IELTS 35 天 · 私人备考台</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">35</div>
+        <div>
+          <strong>IELTS 备考台</strong>
+          <span>9.07 — 10.11</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" type="button" data-view="today">
+          <i data-lucide="check-square" aria-hidden="true"></i><span>今日计划</span>
+        </button>
+        <button class="nav-item" type="button" data-view="progress">
+          <i data-lucide="chart-no-axes-column-increasing" aria-hidden="true"></i><span>进度总览</span>
+        </button>
+        <button class="nav-item" type="button" data-view="report">
+          <i data-lucide="sparkles" aria-hidden="true"></i><span>学习汇报</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-quote" aria-live="polite">
+        <span>今日一句</span>
+        <p id="sidebarQuote">稳定完成，比偶尔拼命更接近高分。</p>
+      </div>
+
+      <div class="privacy-note">
+        <i data-lucide="shield-check" aria-hidden="true"></i>
+        <span>学习数据仅保存在本机</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="phaseLabel">起步周</p>
+          <h1 id="pageTitle">今日计划</h1>
+        </div>
+        <div class="exam-countdown" aria-label="考试倒计时">
+          <span>距离考试</span>
+          <strong><span id="countdownDays">34</span> 天</strong>
+          <small>10 月 11 日 14:00</small>
+        </div>
+      </header>
+
+      <section class="view active" id="view-today" data-view-panel="today">
+        <div class="date-toolbar" aria-label="计划日期">
+          <button class="icon-text-button" id="prevDay" type="button">
+            <i data-lucide="chevron-left" aria-hidden="true"></i><span>前一天</span>
+          </button>
+          <button class="date-trigger" id="dateTrigger" type="button" aria-label="选择日期">
+            <strong id="selectedDateLong">9 月 7 日 · 周一</strong>
+            <span id="selectedDateMeta">听力主项 · 目标 4 小时</span>
+          </button>
+          <input class="sr-only" id="datePicker" type="date" min="2026-09-07" max="2026-10-11">
+          <button class="icon-text-button" id="nextDay" type="button">
+            <span>后一天</span><i data-lucide="chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-main">
+            <div class="progress-copy">
+              <strong id="dayProgressText">今日完成 0%</strong>
+              <span id="dayProgressDetail">0 / 5 项 · 已完成 0 分钟</span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="当日计划完成度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span id="dayProgressBar"></span>
+            </div>
+          </div>
+          <div class="status-message" id="dayStatusMessage">先完成第一小块，让今天动起来。</div>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">可直接编辑</p>
+            <h2>时间块与任务</h2>
+          </div>
+          <button class="secondary-button" id="addTask" type="button">
+            <i data-lucide="plus" aria-hidden="true"></i><span>添加任务</span>
+          </button>
+        </div>
+
+        <div class="timeline" id="taskTimeline" aria-live="polite"></div>
+
+        <section class="daily-review" aria-labelledby="dailyReviewTitle">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">当天复盘</p>
+              <h2 id="dailyReviewTitle">留给明天的线索</h2>
+            </div>
+            <span class="autosave-state" id="autosaveState">已自动保存</span>
+          </div>
+          <div class="review-grid">
+            <label>
+              <span>今天做得好的地方</span>
+              <textarea id="reviewWin" rows="3" placeholder="例如：完整听完了一套题，错题原因比以前更清楚……"></textarea>
+            </label>
+            <label>
+              <span>明天要避免的问题</span>
+              <textarea id="reviewImprove" rows="3" placeholder="例如：晚间开始太晚，口语录音没有回听……"></textarea>
+            </label>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-progress" data-view-panel="progress" hidden>
+        <div class="metric-grid" id="metricGrid">
+          <article class="metric-card">
+            <span>整体完成率</span>
+            <strong id="metricOverall">0%</strong>
+            <small id="metricOverallSub">从今天开始记录</small>
+          </article>
+          <article class="metric-card">
+            <span>累计投入</span>
+            <strong id="metricHours">0h</strong>
+            <small id="metricHoursSub">计划 0h</small>
+          </article>
+          <article class="metric-card">
+            <span>连续打卡</span>
+            <strong id="metricStreak">0 天</strong>
+            <small id="metricStreakSub">完成 60% 即计入</small>
+          </article>
+          <article class="metric-card deadline-card">
+            <span>当前阶段</span>
+            <strong id="metricPhase">起步</strong>
+            <small id="metricPhaseSub">建立稳定节奏</small>
+          </article>
+        </div>
+
+        <section class="progress-section" aria-labelledby="weeklyTitle">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">计划 vs 完成</p>
+              <h2 id="weeklyTitle">每周投入</h2>
+            </div>
+            <div class="chart-legend" aria-label="图例">
+              <span><i class="legend-planned"></i>计划</span>
+              <span><i class="legend-done"></i>完成</span>
+            </div>
+          </div>
+          <div class="weekly-chart" id="weeklyChart" role="img" aria-label="每周计划与已完成学习时长柱状图"></div>
+        </section>
+
+        <section class="progress-section" aria-labelledby="calendarTitle">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">点击任一天查看</p>
+              <h2 id="calendarTitle">35 天完成地图</h2>
+            </div>
+            <div class="heat-legend" aria-label="完成度图例"><span>低</span><i></i><i></i><i></i><i></i><span>高</span></div>
+          </div>
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <section class="phase-roadmap" aria-labelledby="roadmapTitle">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">时间安排</p>
+              <h2 id="roadmapTitle">冲刺路线</h2>
+            </div>
+          </div>
+          <div class="roadmap-list" id="roadmapList"></div>
+        </section>
+
+        <section class="data-tools" aria-labelledby="dataToolsTitle">
+          <div>
+            <h2 id="dataToolsTitle">本地数据备份</h2>
+            <p>换浏览器或清理缓存前导出 JSON 备份；附件不会包含在备份内。</p>
+          </div>
+          <div class="button-row">
+            <button class="secondary-button" id="exportData" type="button"><i data-lucide="download" aria-hidden="true"></i><span>导出备份</span></button>
+            <button class="secondary-button" id="importDataButton" type="button"><i data-lucide="upload" aria-hidden="true"></i><span>导入备份</span></button>
+            <input class="sr-only" id="importDataInput" type="file" accept="application/json,.json">
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-report" data-view-panel="report" hidden>
+        <div class="report-layout">
+          <form class="report-form" id="reportForm">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">每日学习情况</p>
+                <h2>提交今天的真实状态</h2>
+              </div>
+              <span class="report-date" id="reportDateLabel">9 月 7 日</span>
+            </div>
+
+            <div class="score-grid">
+              <label>
+                <span>听力练习分数 <small>可留空</small></span>
+                <input id="listeningScore" type="number" min="0" max="9" step="0.5" placeholder="如 6.5">
+              </label>
+              <label>
+                <span>阅读练习分数 <small>可留空</small></span>
+                <input id="readingScore" type="number" min="0" max="9" step="0.5" placeholder="如 7.0">
+              </label>
+              <label>
+                <span>写作状态</span>
+                <select id="writingState">
+                  <option value="not-done">今天没练</option>
+                  <option value="stuck">完成但很卡</option>
+                  <option value="done">按计划完成</option>
+                  <option value="good">完成且有进步</option>
+                </select>
+              </label>
+              <label>
+                <span>口语状态</span>
+                <select id="speakingState">
+                  <option value="not-done">今天没练</option>
+                  <option value="stuck">开口但不流畅</option>
+                  <option value="done">按计划完成</option>
+                  <option value="good">表达比较顺畅</option>
+                </select>
+              </label>
+            </div>
+
+            <fieldset class="difficulty-fieldset">
+              <legend>今天最卡的地方 <small>可多选</small></legend>
+              <div class="chip-options" id="difficultyOptions">
+                <label><input type="checkbox" value="听力定位"><span>听力定位</span></label>
+                <label><input type="checkbox" value="同义替换"><span>同义替换</span></label>
+                <label><input type="checkbox" value="阅读速度"><span>阅读速度</span></label>
+                <label><input type="checkbox" value="判断匹配"><span>判断/匹配</span></label>
+                <label><input type="checkbox" value="写作审题"><span>写作审题</span></label>
+                <label><input type="checkbox" value="论证结构"><span>论证结构</span></label>
+                <label><input type="checkbox" value="口语流利度"><span>口语流利度</span></label>
+                <label><input type="checkbox" value="口语素材"><span>口语素材</span></label>
+              </div>
+            </fieldset>
+
+            <label class="range-field">
+              <span>今日精力 <strong id="energyValue">3 / 5</strong></span>
+              <input id="energyRange" type="range" min="1" max="5" step="1" value="3">
+              <span class="range-labels"><small>很疲惫</small><small>状态很好</small></span>
+            </label>
+
+            <label class="report-notes">
+              <span>学习记录与问题</span>
+              <textarea id="studyLog" rows="7" placeholder="尽量写具体：做了什么、错在哪里、是知识问题还是时间问题。比如：Section 3 选择题跟不上；Task 2 第二段论证展开很慢；Part 2 说到 40 秒就没内容……"></textarea>
+            </label>
+
+            <div class="attachment-area">
+              <div>
+                <strong>学习材料</strong>
+                <span>截图、PDF 或口语录音仅保存在本机</span>
+              </div>
+              <label class="secondary-button file-button">
+                <i data-lucide="paperclip" aria-hidden="true"></i><span>添加文件</span>
+                <input id="attachmentInput" type="file" accept="image/*,audio/*,application/pdf" multiple>
+              </label>
+            </div>
+            <div class="attachment-list" id="attachmentList" aria-live="polite"></div>
+
+            <button class="primary-button" id="generateCoach" type="submit">
+              <i data-lucide="sparkles" aria-hidden="true"></i><span>生成复盘与明日建议</span>
+            </button>
+          </form>
+
+          <aside class="coach-panel" aria-labelledby="coachTitle">
+            <div class="coach-heading">
+              <div class="coach-icon"><i data-lucide="brain" aria-hidden="true"></i></div>
+              <div>
+                <p class="eyebrow">本地智能教练</p>
+                <h2 id="coachTitle">今日反馈</h2>
+              </div>
+            </div>
+            <div id="coachEmpty" class="coach-empty">
+              <p>填完今天的情况后，这里会结合完成度、分数、卡点和备考阶段给出具体建议。</p>
+              <small>无需账号或 API 密钥，分析在浏览器本机完成。</small>
+            </div>
+            <div id="coachResult" class="coach-result" hidden aria-live="polite">
+              <blockquote id="coachEncouragement"></blockquote>
+              <section>
+                <h3>今天的判断</h3>
+                <p id="coachDiagnosis"></p>
+              </section>
+              <section>
+                <h3 id="coachTomorrowTitle">明日侧重点</h3>
+                <ol id="coachPriorities"></ol>
+              </section>
+              <section class="coach-caution">
+                <h3>执行提醒</h3>
+                <p id="coachCaution"></p>
+              </section>
+              <small id="coachGeneratedAt"></small>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
